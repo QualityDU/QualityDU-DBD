@@ -23,10 +23,10 @@ CREATE TABLE public.acts (
 );
 '''
 def txt_consume(txt_path, conn, cur):
+  txt_basename = os.path.basename(txt_path)
   try:
     with open(txt_path, 'r') as txt_file:
       txt_payload = txt_file.read()
-      txt_basename = os.path.basename(txt_path)
       # the basename has the format D<YYYY><JJJ><PPPP><TT>.txt
       # where YYYY is the year, JJJ is the journal number, PPPP is act position, and TT is part number
       
