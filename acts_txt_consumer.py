@@ -59,7 +59,7 @@ if __name__ == '__main__':
         # the mq contains pdf file basename list
         message = redis_client.blpop('qualitydu_dbd:file_mq', timeout=0)
         if message:
-          txt_basename = message[1]
+          txt_basename = message[1].decode('utf-8')
           if not txt_basename:
             raise Exception('Failed to read message[1]')
           print(f"Reading {txt_basename}")
