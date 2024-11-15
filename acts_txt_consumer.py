@@ -55,6 +55,8 @@ def txt_consume(txt_path, conn, cur):
         (du_code, year, journal_no, position, part_no, txt_payload)
       )
       conn.commit() # ddl statements need to be committed
+      # push to qualitydu_dbd:keybert_file_mq
+      subprocess.run(["redis-cli", "rpush", "qualitydu_dbd:keybert_file_mq", f"{txt_basename}"])
   except Exception as e:
     print(f"Error processing {txt_path}: {e}")
     # repush to the queue

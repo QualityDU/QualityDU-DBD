@@ -19,6 +19,9 @@ def pdf_consume(pdf_name, pdf_dir, txt_dir):
     ]
   )
   process_pdftotext.wait()
+  exit_code = process_pdftotext.returncode
+  if exit_code != 0:
+    print(f"Warning: pdftotext returned {exit_code}")
   # push to qualitydu_dbd:file_mq
   subprocess.run(["redis-cli", "rpush", "qualitydu_dbd:file_mq", f"{pdf_name}.txt"])
 
