@@ -12,8 +12,10 @@ def pdf_consume(pdf_name, pdf_dir, txt_dir):
   process_pdftotext = subprocess.Popen(
     [
       "pdftotext", 
-      '"' + f"{pdf_dir}/{pdf_name}.pdf" + '"', 
-      f"{txt_dir}/{pdf_name}.txt"
+      #'"' + f"{pdf_dir}/{pdf_name}.pdf" + '"', 
+      os.path.join(pdf_dir, f"{pdf_name}.pdf"),
+      #f"{txt_dir}/{pdf_name}.txt"
+      os.path.join(txt_dir, f"{pdf_name}.txt")
     ]
   )
   process_pdftotext.wait()
@@ -26,7 +28,7 @@ if __name__ == '__main__':
     # the mq contains pdf file basename list
     message = redis_client.blpop('duscr:file_mq', timeout=0)
     if message:
-      pdf_basename = message[1]
+      pdf_basename = message[1].decode('utf-8')
       if not pdf_basename:
         raise Exception('Failed to read message[1]')
       print(f"Processing {pdf_basename}")
