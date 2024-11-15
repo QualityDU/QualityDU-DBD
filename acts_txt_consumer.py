@@ -12,13 +12,15 @@ The acts table is defined as:
 CREATE TABLE public.acts (
 	du_code varchar NOT NULL,
 	"year" int4 NOT NULL,
-	journal_no int4 NULL,
+	journal_no int4 DEFAULT 0 NOT NULL,
 	num_edits int4 DEFAULT 0 NOT NULL,
 	text_payload varchar NOT NULL,
 	date_scraped date NOT NULL,
 	act_id serial4 NOT NULL,
 	last_edited_date date NULL,
 	last_tag_added_date date NULL,
+	"position" int4 DEFAULT 0 NOT NULL,
+	part_no int4 DEFAULT 0 NOT NULL,
 	CONSTRAINT acts_pk PRIMARY KEY (act_id)
 );
 '''
@@ -39,13 +41,20 @@ def txt_consume(txt_path, conn, cur):
       # journal_no is JJJ
       journal_no = int(du_code[5:8])
 
+      # postion is PPPP
+      position = int(du_code[8:12])
+
+      # part_no is TT
+      part_no = int(du_code[12:14])
+
       cur.execute(
         '''
-        INSERT INTO acts (du_code, year, journal_no, text_payload, date_scraped)
-        VALUES (%s, %s, %s, %s, NOW())
+        INSERT INTO acts (du_code, year, journal_no, position, part_no, text_payload, date_scraped)
+        VALUES (%s, %s, %s, %s, %s, %s, NOW())
         ''',
-        (du_code, year, journal_no, txt_payload)
+        (du_code, year, journal_no, position, part_no, txt_payload)
       )
+      conn.commit() # ddl statements need to be committed
   except Exception as e:
     print(f"Error processing {txt_path}: {e}")
     # repush to the queue
