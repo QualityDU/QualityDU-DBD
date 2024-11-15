@@ -1,0 +1,1 @@
+Note: requires pdftotext and redis to be available on the host system
