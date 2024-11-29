@@ -25,6 +25,9 @@ CREATE TABLE public.acts (
 );
 '''
 def txt_consume(txt_path, conn, cur):
+  if not os.path.isfile(txt_path):
+    return;
+
   txt_basename = os.path.basename(txt_path)
   try:
     with open(txt_path, 'r') as txt_file:
